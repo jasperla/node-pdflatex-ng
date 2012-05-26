@@ -1,0 +1,27 @@
+{
+  "name" : "pdflatex-ng",
+  "version" : "0.0.1",
+  "description" : "wrapper around pdflatex(1)",
+  "homepage" : "http://github.com/jasperla/node-pdflatex-ng",
+  "author": {
+    "name": "Jasper Lievisse Adriaanse",
+    "email": "jasper@humppa.nl"
+  },
+  "license": "BSD",
+  "keywords" : [
+    "pdflatex",
+    "pdf",
+    "latex",
+    "texlive",
+    "dvi"
+  ],
+  "dependencies"  : [],
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "main" : "pdflatex-ng.js",
+  "repository" : {
+    "type": "git",
+    "url": "git://github.com/jasperla/node-pdflatex-ng.git"
+  }
+}
