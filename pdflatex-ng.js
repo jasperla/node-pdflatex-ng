@@ -17,46 +17,68 @@ PDFLatex.prototype.setOutputDir = function(path) {
 };
 
 validateInput = function(input) {
-	if (input.length > 0) {
-		path.exists(input, function(exists) {
-			if (!exists) {
-				throw new Error("Invalid input provided. Does the file exist?");
-			}
-		});
+	var rv = { "rc": "-1", "str": "" };
+
+	if (input.length < 1) {
+		rv = { "rc": "0",
+		       "str": "Invalid input provided. Empty imput?"};
 	}
-	return true;
+
+	path.exists(input, function(exists) {
+		if (!exists) {
+			rv = { "rc": "0",
+			       "str": "Invalid input provided. Does the file exist?"};
+		}
+	});
+
+	if (rv.rc < 0) {
+		rv = { "rc" : "1", "str": undefined };
+	}
+
+	return rv;
 };
 
 validOutputDir = function(dir) {
 	var outputDir = dir;
+	var rv = { "rc": "-1", "str": "" };
+
 	fs.lstat(outputDir, function(err, stats) {
 			if (!err && stats.isDirectory()) {
-				return true;
+				rv = { "rc": "1", "str": "" };
 			} else if (!err && stats.isFile()){
-				throw new Error("Cannot write to " + outputDir + ", it is a file");
-				return false;
+				rv = { "rc": "0",
+				       "str": "Cannot write to " + outputDir + ", it is a file" };
 			} else {
 				mkdirp(outputDir, function(err) {
 						if (err) console.error(err);
 				});
-				return true;
+				rv = { "rc": "1", "str": "" };
 			}
 	});
-	return true;
+
+	if (rv.rc < 0) {
+		rv = { "rc": "1", "str": undefined };
+	}
+
+	return rv;
 };
 
 PDFLatex.prototype.typeset = function() {
-	if (validOutputDir(this.outputDirectory)) {
-		if (validateInput(this.inputPath)) {
+	var rvd = validOutputDir(this.outputDirectory);
+	if (rvd.rc > 0) {
+		var rv = validateInput(this.inputPath);
+		if (rv.rc > 0) {
 			var command = "pdflatex -output-directory " +
 			    this.outputDirectory + " '" + this.inputPath + "'";
 			util.puts(command);
 			exec(command, function(err) {
 				if (err) throw err;
 			});
+		} else {
+			throw new Error(rv.str);
 		}
 	} else {
-		return false;
+		throw new Error(rvd.str);
 	}
 };
 

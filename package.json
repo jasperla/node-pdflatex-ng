@@ -1,6 +1,6 @@
 {
   "name" : "pdflatex-ng",
-  "version" : "0.0.2",
+  "version" : "0.0.3",
   "description" : "wrapper around pdflatex(1)",
   "homepage" : "http://github.com/jasperla/node-pdflatex-ng",
   "author": {
